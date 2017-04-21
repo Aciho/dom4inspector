@@ -25,7 +25,8 @@ MSite.initSite = function(o) {
 	o.provdef = [];
 	o.scales = [];
 	o.rit = '';
-}
+};
+
 MSite.prepareData_PreMod = function() {
 	for (var oi=0, o;  o= modctx.sitedata[oi];  oi++) {
 		o.hmon = [];
@@ -39,31 +40,29 @@ MSite.prepareData_PreMod = function() {
 		o.provdef = [];
 		o.scales = [];
 		var capunit = Utils.keyListToTable(o, 'hmon');
-		for (var oj=0, cap; cap = capunit[oj]; oj++) {
+
+        var oj, cap;
+		for (oj=0; cap = capunit[oj]; oj++) {
 			o.hmon.push(cap);
 		}
 		var capcom = Utils.keyListToTable(o, 'hcom');
-		for (var oj=0, cap; cap = capcom[oj]; oj++) {
-			o.hcom.push(cap);
-		}
-		var capcom = Utils.keyListToTable(o, 'hcom');
-		for (var oj=0, cap; cap = capcom[oj]; oj++) {
+		for (oj=0; cap = capcom[oj]; oj++) {
 			o.hcom.push(cap);
 		}
 		var mon = Utils.keyListToTable(o, 'mon');
-		for (var oj=0, cap; cap = mon[oj]; oj++) {
+		for (oj=0; cap = mon[oj]; oj++) {
 			o.mon.push(cap);
 		}
 		var com = Utils.keyListToTable(o, 'com');
-		for (var oj=0, cap; cap = com[oj]; oj++) {
+		for (oj=0; cap = com[oj]; oj++) {
 			o.com.push(cap);
 		}
 		var summons = Utils.keyListToTable(o, 'sum');
-		for (var oj=0, cap; cap = summons[oj]; oj++) {
+		for (oj=0; cap = summons[oj]; oj++) {
 			o.sum.push(cap);
 		}
 		var provdef = Utils.keyListToTable(o, 'provdef');
-		for (var oj=0, cap; cap = provdef[oj]; oj++) {
+		for (oj=0; cap = provdef[oj]; oj++) {
 			o.provdef.push(cap);
 		}
 	}
@@ -71,57 +70,56 @@ MSite.prepareData_PreMod = function() {
 
 MSite.prepareData_PostMod = function() {
 	function parseSummoned(o, sum){
-            for (var cc=0; uid=sum[cc]; cc++) {
+			sum.forEach( function (uid) {
                 var found = false;
-                for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-                    if (Math.round(unit.id) == uid && unit.nations && o.nations) {
-                        for (var ii=0,natid; natid=o.nations[ii]; ii++) {
+                modctx.unitdata.forEach( function(unit) {
+                    if (Math.round(unit.id) === uid && unit.nations && o.nations) {
+                        o.nations.forEach( function(natid) {
                             if (unit.nations[natid] && !found) {
                                 unit.summonedfrom = unit.summonedfrom || [];
                                 unit.summonedfrom.push( o );
                                 found = true;
                             }
-                        }
-                    } else if (Math.round(unit.id) == uid && !found) {
+                        });
+                    } else if (Math.round(unit.id) === uid && !found) {
                         unit.summonedfrom = unit.summonedfrom || [];
                         unit.summonedfrom.push( o );
                         found = true;
                     }
-                }
+				});
                 if (!found) {
-                    for (var cc=0; uid=sum[cc]; cc++) {
-                        for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-                            if (Math.round(unit.id) == uid && unit.nations && o.nations) {
+                    sum.forEach( function (uid) {
+                        modctx.unitdata.forEach( function(unit) {
+                            if (Math.round(unit.id) === uid && unit.nations && o.nations) {
                                 unit.summonedfrom = unit.summonedfrom || [];
                                 unit.summonedfrom.push( o );
                             }
-                        }
-                    }
+                        });
+                    });
                 }
-            }
+			});
         }
 
-	for (var oi=0, o;  o= modctx.sitedata[oi];  oi++) {
-		
-		o.renderOverlay = MSite.renderOverlay;
+    modctx.sitedata.forEach( function parseSite(o) {
+        o.renderOverlay = MSite.renderOverlay;
 		o.matchProperty = MSite.matchProperty;
-		
+
 		//convert to numbers (for column ordering)
 		//doesn't seem to cause any further problems..
 		o.id = parseInt(o.id);
-		
-		if (o.loc == 0) {
+
+		if (o.loc === 0) {
 			delete o.loc;
 		}
-		
+
 		if (o.lab) {
 			o.lab = 1;
 		}
-		
+
 		if (o.rarity) {
 			o.rarity = parseInt(o.rarity);
 		}
-		
+
 		//searchable string
 		o.searchable = o.name.toLowerCase();
 
@@ -138,229 +136,144 @@ MSite.prepareData_PostMod = function() {
 
 		//magic gems
 		o.mpath = '';
-		for (var i=0; i<modconstants.pathkeys.length; i++) {
-			var k = modconstants.pathkeys[i];
-			var plevel  = o[k];
-			
-			//append to pathcost code
-			if (Utils.is(plevel)) {
-				o.mpath +=  k + plevel + ' '; //string
-			}
-		}		
-		
-		if (o.mpath) 
+        modconstants.pathkeys.forEach( function constants(k) {
+            var plevel  = o[k];
+            //append to pathcost code
+            if (Utils.is(plevel)) {
+                o.mpath +=  k + plevel + ' '; //string
+            }
+		});
+
+
+		if (o.mpath)
 			o.listed_gempath = '0'+o.mpath;
 		else o.listed_gempath = '';
 
 		//magic gems when claimed
 		o.mpath2 = '';
-		for (var i=0; i<modconstants.pathkeys.length; i++) {
-			var k = modconstants.pathkeys[i];
+        modconstants.pathkeys.forEach( function constants2(k) {
 			var plevel  = o[k + '2'];
-			
+
 			//append to pathcost code
 			if (Utils.is(plevel)) {
 				o.mpath2 +=  k + plevel + ' '; //string
 			}
-		}		
-		
+		});
+
 		o.events = [];
-		for (var evti=0, evt;  evt= modctx.eventdata[evti];  evti++) {
-			if (evt.req_site || evt.req_foundsite || evt.req_hiddensite || evt.req_nearbysite) {
-				var sitename = evt.description.match(/\[(.*?)\]/);
-				if (sitename && sitename.length > 1) {
-					if (sitename[1] == o.name) {
-						o.events.push(evt.id);
-					}
-				} else if (evt.req_site == o.id) {
-					o.events.push(evt.id);
-				} else if (evt.req_foundsite == o.id) {
-					o.events.push(evt.id);
-				} else if (evt.req_hiddensite == o.id) {
-					o.events.push(evt.id);
-				} else if (evt.req_nearbysite == o.id) {
-					o.events.push(evt.id);
-				}
-			}
-		}
-		if (o.events.length == 0) {
+        o.newsiteevents = [];
+        modctx.eventdata.forEach( function eventdata( evt ) {
+            if (evt.req_site || evt.req_foundsite || evt.req_hiddensite || evt.req_nearbysite) {
+                if (typeof evt.specifiedName !== "undefined") {
+                    if (evt.specifiedName === o.name) {
+                        o.events.push(evt.id);
+                    }
+                } else if (evt.req_site === o.id) {
+                    o.events.push(evt.id);
+                } else if (evt.req_foundsite === o.id) {
+                    o.events.push(evt.id);
+                } else if (evt.req_hiddensite === o.id) {
+                    o.events.push(evt.id);
+                } else if (evt.req_nearbysite === o.id) {
+                    o.events.push(evt.id);
+                }
+            }
+
+            if (evt.newsite) {
+                if (typeof evt.specifiedName !== "undefined") {
+                    if (o.name === evt.specifiedName) {
+                        o.newsiteevents.push(evt.id);
+                    }
+                } else if (evt.newsite === o.id) {
+                    o.newsiteevents.push(evt.id);
+                }
+            }
+        });
+
+		if (o.events.length === 0) {
 			delete o.events;
 		}
-		
-		o.newsiteevents = [];
-		for (var evti=0, evt;  evt= modctx.eventdata[evti];  evti++) {
-			if (evt.newsite) {
-				var sitename = evt.description.match(/\[(.*?)\]/);
-				if (sitename && sitename.length > 1) {
-					if (sitename[1] == o.name) {
-						o.newsiteevents.push(evt.id);
-					}
-				} else if (evt.newsite == o.id) {
-					o.newsiteevents.push(evt.id);
-				}
-			}
-		}
-		if (o.newsiteevents.length == 0) {
+		if (o.newsiteevents.length === 0) {
 			delete o.newsiteevents;
 		}
-		
+
 		o.nations = [];
-		for (var nati=0, nat;  nat= modctx.nationdata[nati];  nati++) {
-			if (nat.sites.indexOf(o.id) != -1) {
-				o.nations.push(nat.id);
-			}
-		}
-		if (o.nations.length == 0) {
+        modctx.nationdata.forEach( function nation(nat) {
+            if (nat.sites.indexOf(o.id) != -1) {
+                o.nations.push(nat.id);
+            }
+		});
+		if (o.nations.length === 0) {
 			delete o.nations;
 		}
-		if (o.provdef.length == 0) {
+		if (o.provdef.length === 0) {
 			delete o.provdef;
 		}
-		if (o.hcom.length == 0) {
+		if (o.hcom.length === 0) {
 			delete o.hcom;
 		} else {
-			for (var cc=0; uid=o.hcom[cc]; cc++) {
-				var found = false;
-				for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-					if (Math.round(unit.id) == uid && unit.nations && o.nations) {
-						for (var ii=0,natid; natid=o.nations[ii]; ii++) {
-							if (unit.nations[natid] && !found) {
-								unit.recruitedby = unit.recruitedby || [];
-								unit.recruitedby.push( o );
-								found = true;
-							}
-						}
-					} else if (Math.round(unit.id) == uid && !found) {
-						unit.recruitedby = unit.recruitedby || [];
-						unit.recruitedby.push( o );
-						found = true;
-					}
-				}
-				if (!found) {
-					for (var cc=0; uid=o.hcom[cc]; cc++) {
-						for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-							if (Math.round(unit.id) == uid && unit.nations && o.nations) {
-								unit.recruitedby = unit.recruitedby || [];
-								unit.recruitedby.push( o );
-							}
-						}
-					}
-				}
-			}
+            o.hcom.forEach( function hcom(uid) {
+                modctx.unitdata.forEach( function (unit) {
+                    if (Math.round(unit.id) === uid) {
+                        unit.recruitedby = unit.recruitedby || [];
+                        unit.recruitedby.push( o );
+                    }
+                });
+            });
 		}
-		if (o.hmon.length == 0) {
+		if (o.hmon.length === 0) {
 			delete o.hmon;
 		} else {
-			for (var cc=0; uid=o.hmon[cc]; cc++) {
-				var found = false;
-				for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-					if (Math.round(unit.id) == uid && unit.nations && o.nations) {
-						for (var ii=0,natid; natid=o.nations[ii]; ii++) {
-							if (unit.nations[natid] && !found) {
-								unit.recruitedby = unit.recruitedby || [];
-								unit.recruitedby.push( o );
-								found = true;
-							}
-						}
-					} else if (Math.round(unit.id) == uid && !found) {
-						unit.recruitedby = unit.recruitedby || [];
-						unit.recruitedby.push( o );
-						found = true;
-					}
-				}
-				if (!found) {
-					for (var cc=0; uid=o.hmon[cc]; cc++) {
-						for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-							if (Math.round(unit.id) == uid && unit.nations && o.nations) {
-								unit.recruitedby = unit.recruitedby || [];
-								unit.recruitedby.push( o );
-							}
-						}
-					}
-				}
-			}
+            o.hmon.forEach( function hmon(uid) {
+                modctx.unitdata.forEach( function (unit) {
+                    if (Math.round(unit.id) === uid) {
+                        unit.recruitedby = unit.recruitedby || [];
+                        unit.recruitedby.push( o );
+                    }
+				});
+			});
 		}
-		if (o.com.length == 0) {
+		if (o.com.length === 0) {
 			delete o.com;
 		} else {
-			for (var cc=0; uid=o.com[cc]; cc++) {
-				var found = false;
-				for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-					if (Math.round(unit.id) == uid && unit.nations && o.nations) {
-						for (var ii=0,natid; natid=o.nations[ii]; ii++) {
-							if (unit.nations[natid] && !found) {
-								unit.recruitedby = unit.recruitedby || [];
-								unit.recruitedby.push( o );
-								found = true;
-							}
-						}
-					} else if (Math.round(unit.id) == uid && !found) {
-						unit.recruitedby = unit.recruitedby || [];
-						unit.recruitedby.push( o );
-						found = true;
-					}
-				}
-				if (!found) {
-					for (var cc=0; uid=o.com[cc]; cc++) {
-						for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-							if (Math.round(unit.id) == uid && unit.nations && o.nations) {
-								unit.recruitedby = unit.recruitedby || [];
-								unit.recruitedby.push( o );
-							}
-						}
-					}
-				}
-			}
-		}
-		if (o.mon.length == 0) {
+            o.com.forEach( function com(uid) {
+                modctx.unitdata.forEach( function (unit) {
+                    if (Math.round(unit.id) === uid) {
+                        unit.recruitedby = unit.recruitedby || [];
+                        unit.recruitedby.push( o );
+                    }
+                });
+            });
+        }
+		if (o.mon.length === 0) {
 			delete o.mon;
 		} else {
-			for (var cc=0; uid=o.mon[cc]; cc++) {
-				var found = false;
-				for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-					if (Math.round(unit.id) == uid && unit.nations && o.nations) {
-						for (var ii=0,natid; natid=o.nations[ii]; ii++) {
-							if (unit.nations[natid] && !found) {
-								unit.recruitedby = unit.recruitedby || [];
-								unit.recruitedby.push( o );
-								found = true;
-							}
-						}
-					} else if (Math.round(unit.id) == uid && !found) {
-						unit.recruitedby = unit.recruitedby || [];
-						unit.recruitedby.push( o );
-						found = true;
-					}
-				}
-				if (!found) {
-					for (var cc=0; uid=o.mon[cc]; cc++) {
-						for (var uniti=0, unit;  unit= modctx.unitdata[uniti];  uniti++) {
-							if (Math.round(unit.id) == uid && unit.nations && o.nations) {
-								unit.recruitedby = unit.recruitedby || [];
-								unit.recruitedby.push( o );
-							}
-						}
-					}
-				}
-			}
+            o.mon.forEach( function mon(uid) {
+                modctx.unitdata.forEach( function (unit) {
+                    if (Math.round(unit.id) === uid) {
+                        unit.recruitedby = unit.recruitedby || [];
+                        unit.recruitedby.push( o );
+                    }
+                });
+            });
 		}
 
-		if (o.sum.length == 0) {
+		if (o.sum.length === 0) {
 			delete o.sum;
 		} else {
 			parseSummoned(o, o.sum);
 		}
-		if (o.suml2.length == 0) {
+		if (o.suml2.length === 0) {
 			delete o.suml2;
 		} else {
 			parseSummoned(o, o.suml2);
 		}
-		if (o.suml3.length == 0) {
+		if (o.suml3.length === 0) {
 			delete o.suml3;
 		} else {
 			parseSummoned(o, o.suml3);
 		}
-		if (o.suml4.length == 0) {
+		if (o.suml4.length === 0) {
 			delete o.suml4;
 		} else {
 			parseSummoned(o, o.suml4);
@@ -369,8 +282,9 @@ MSite.prepareData_PostMod = function() {
 		if (o.rit == '') {
 			delete o.rit;
 		}
-	}
-	
+	});
+    // console.profileEnd('MSite PostMod Internal');
+
 }
 
 
@@ -426,22 +340,21 @@ MSite.CGrid = Utils.Class( DMI.CGrid, function() {
 		if (args.str && args.str == String(o.id)) return true;
 		
 		//search string
-		if (args.str && o.searchable.indexOf(args.str) == -1)
+		if (args.str && o.searchable.indexOf(args.str) === -1)
 			return false;
 		
 		//magic paths
 		if (args.mpaths) {
 			var found = false;
-			var arr = args.mpaths.split("");
-			for (var jj=0, pathStr; pathStr=arr[jj]; jj++) {
-				if (o.mpath.indexOf(pathStr) != -1)
+			args.mpaths.split("").forEach( function(pathStr) {
+				if (o.mpath.indexOf(pathStr) !== -1)
 					found = true;
-			}
+			});
 			if (!found) return false;
 		}
 		
 		//site path
-		if (args.sitepath && !( args.sitepath == o.path ))
+		if (args.sitepath && !( args.sitepath === o.path ))
 			return false;
 
 		//site scale
@@ -454,11 +367,11 @@ MSite.CGrid = Utils.Class( DMI.CGrid, function() {
 
 		//site terrain
 		if (args.sitetype) {
-			if (args.sitetype == "Normal" && o.rarity > 4)
+			if (args.sitetype === "Normal" && o.rarity > 4)
 				return false;
-			if (args.sitetype == "Special" && o.rarity !== 5)
+			if (args.sitetype === "Special" && o.rarity !== 5)
 				return false;
-			if (args.sitetype == "Thrones" && o.rarity < 11)
+			if (args.sitetype === "Thrones" && o.rarity < 11)
 				return false;
 		}
 
@@ -467,12 +380,11 @@ MSite.CGrid = Utils.Class( DMI.CGrid, function() {
 		if (args.properties) {
 			//need to finalise stats now..
 			DMI.MUnit.prepareForRender(o);
-			for (var i = 0; i < args.properties.length; i++){
-				var prop = args.properties[i];
+            args.properties.forEach( function(prop) {
 				var r =  o.matchProperty(o, prop.key, prop.comp, prop.val);
 				if (prop.not  ?  r  :  !r)
 					return false;
-			}
+			});
 		}
 		return true;
 	}
@@ -516,7 +428,7 @@ MSite.CGrid = Utils.Class( DMI.CGrid, function() {
 				if ( $('#siteboosterordericon')
 				     .attr({alt:L, src:'images/magicicons/Gem_'+L+'.png', 'class':'gemicon Gem_'+L})
 				     .css('visibility','visible')
-				     .length==0 ) 
+				     .length === 0 )
 				{
 					//add icon if not exists yet
 					$(".slick-header-column[id*=listed_gempath]")

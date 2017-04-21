@@ -11,11 +11,8 @@ Options['Show internal keys'] = 1;
 
 //loaded from query string
 Options['Show mod cmds'] = null;            
-//loaded from query string
-Options['Load events'] = null;            
 
 Options['Select mod columns'] = 4;
-
 
 Utils.wikiLink = function(name, subname, cssclass) {
 	if (subname)

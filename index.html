@@ -301,17 +301,8 @@
 			search Events: <input type="text" class="search-box" title="filter by name or find id" id="eventq" />
 			<br/>
 			
-			<label for="loadEvents"><input class="load-events" type='checkbox' value='loadEvents' id='loadEvents' onclick='if (this.checked) insertParam("loadEvents","1"); else insertParam("loadEvents","0");'
-        	/>Load Events</label>
-			
 		</div>
-		<script>
-			if (gup("loadEvents") == "1") {
-				document.getElementById("loadEvents").checked = true;
-			} else {
-				document.getElementById("loadEvents").checked = false;
-			}
-		</script>
+
 		<div class="hidden-block">
 			<div class="filters-text properties">
 				<div class = "property panel eventview">

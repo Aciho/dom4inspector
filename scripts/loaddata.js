@@ -402,8 +402,7 @@ function downloadData( g_data ) {
            'gamedata/BaseU.csv'+versionCode,
            'gamedata/MagicSites.csv'+versionCode,
            'gamedata/Mercenary.csv'+versionCode,
-           //'gamedata/events.csv'+versionCode,
-           'gamedata/events.csv'+versionCode,
+           'gamedata/events2.csv'+versionCode,
            'gamedata/nations.csv'+versionCode,
            'gamedata/armors.csv'+versionCode,
            'gamedata/protections_by_armor.csv'+versionCode,
@@ -444,9 +443,9 @@ function downloadData( g_data ) {
            'gamedata/attributes_by_armor.csv'+versionCode
 	];
 	
-	if (location.search.indexOf('loadEvents=1') != -1) {
-		filestoload.concat( 'gamedata/events.csv'+versionCode );
-	}
+	// if (location.search.indexOf('loadEvents=1') != -1) {
+	// 	filestoload.concat( 'gamedata/events.csv'+versionCode );
+	// }
 		
 	var onerror = function( emsg, details ) {
 		console.log( emsg + "\n" + details );
@@ -516,202 +515,197 @@ function parseData( g_data ) {
 			modctx.itemdata = parseTextToTable(data);
 			modctx.itemlookup = createLookup(modctx.itemdata, 'id', 'name');
 		
-			var data = g_data.server_data['gamedata/armors.csv'+versionCode];
+			data = g_data.server_data['gamedata/armors.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/armors.csv'));
 			modctx.armordata = parseTextToTable(data);
 			modctx.armorlookup = createLookup(modctx.armordata, 'id', 'name');
 		
-			var data = g_data.server_data['gamedata/protections_by_armor.csv'+versionCode];
+			data = g_data.server_data['gamedata/protections_by_armor.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/protections_by_armor.csv'));
 			modctx.protections_by_armor = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/BaseU.csv'+versionCode];
+			data = g_data.server_data['gamedata/BaseU.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/BaseU.csv'));
 			modctx.unitdata = parseTextToTable(data);
 			modctx.unitlookup = createLookup(modctx.unitdata, 'id', 'name');
 		
-			var data = g_data.server_data['gamedata/weapons.csv'+versionCode];
+			data = g_data.server_data['gamedata/weapons.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/weapons.csv'));
 			modctx.wpndata = parseTextToTable(data);
 			modctx.wpnlookup = createLookup(modctx.wpndata, 'id', 'name');
 		
-			var data = g_data.server_data['gamedata/attributes_by_weapon.csv'+versionCode];
+			data = g_data.server_data['gamedata/attributes_by_weapon.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/attributes_by_weapon.csv'));
 			modctx.attributes_by_weapon = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/attributes_by_armor.csv'+versionCode];
+			data = g_data.server_data['gamedata/attributes_by_armor.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/attributes_by_armor.csv'));
 			modctx.attributes_by_armor = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/spells.csv'+versionCode];
+			data = g_data.server_data['gamedata/spells.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/spells.csv'));
 			modctx.spelldata = parseTextToTable(data);
 			modctx.spelllookup = createLookup(modctx.spelldata, 'id', 'name');
 		
-			var data = g_data.server_data['gamedata/MagicSites.csv'+versionCode];
+			data = g_data.server_data['gamedata/MagicSites.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/MagicSites.csv'));
 			modctx.sitedata = parseTextToTable(data);
 			modctx.sitelookup = createLookup(modctx.sitedata, 'id', 'name');
 		
-			var data = g_data.server_data['gamedata/Mercenary.csv'+versionCode];
+			data = g_data.server_data['gamedata/Mercenary.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/Mercenary.csv'));
 			modctx.mercdata = parseTextToTable(data);
 			modctx.merclookup = createLookup(modctx.mercdata, 'id', 'name');
 
-			if (location.search.indexOf('loadEvents=1') != -1) {
-				var data = g_data.server_data['gamedata/events.csv'+versionCode];
-				if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/events.csv'));
-				modctx.eventdata = parseTextToTable(data);
-				modctx.eventlookup = createLookup(modctx.eventdata, 'id', 'name');
-			} else {
-				modctx.eventdata = [];
-				modctx.eventlookup = [];
-			}	
+			data = g_data.server_data['gamedata/events2.csv'+versionCode];
+			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/events2.csv'));
+			modctx.eventdata = parseTextToTable(data);
+			modctx.eventlookup = createLookup(modctx.eventdata, 'id', 'name');
 
-			var data = g_data.server_data['gamedata/nations.csv'+versionCode];
+			data = g_data.server_data['gamedata/nations.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/nations.csv'));
 			modctx.nationdata = parseTextToTable(data);
 			modctx.nationlookup = createLookup(modctx.nationdata, 'id', 'nationname');
 		
-			var data = g_data.server_data['gamedata/effects.csv'+versionCode];
+			data = g_data.server_data['gamedata/effects.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/effects.csv'));
 			modctx.effects = parseTextToTable(data);
 			modctx.effects_lookup = createLookup(modctx.effects, 'record_id');
 		
-			var data = g_data.server_data['gamedata/effect_modifier_bits.csv'+versionCode];
+			data = g_data.server_data['gamedata/effect_modifier_bits.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/effect_modifier_bits.csv'));
 			modctx.effect_modifier_bits = parseTextToTable(data);
 			modctx.effect_modifier_bits_lookup = createLookup(modctx.effect_modifier_bits, 'bit_value');
 		
-			var data = g_data.server_data['gamedata/effects_info.csv'+versionCode];
+			data = g_data.server_data['gamedata/effects_info.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/effects_info.csv'));
 			modctx.effects_info = parseTextToTable(data);
 			modctx.effects_info_lookup = createLookup(modctx.effects_info, 'number');
 		
-			var data = g_data.server_data['gamedata/attribute_keys.csv'+versionCode];
+			data = g_data.server_data['gamedata/attribute_keys.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/attribute_keys.csv'));
 			modctx.attribute_keys = parseTextToTable(data);
 			modctx.attribute_keys_lookup = createLookup(modctx.attribute_keys, 'number');
 		
-			var data = g_data.server_data['gamedata/attributes.csv'+versionCode];
+			data = g_data.server_data['gamedata/attributes.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/attributes.csv'));
 			modctx.attributes = parseTextToTable(data);
 			modctx.attributes_lookup = createLookup(modctx.attributes, 'record_id');
 		
-			var data = g_data.server_data['gamedata/attributes_by_spell.csv'+versionCode];
+			data = g_data.server_data['gamedata/attributes_by_spell.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/attributes_by_spell.csv'));
 			modctx.attributes_by_spell = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/afflictions.csv'+versionCode];
+			data = g_data.server_data['gamedata/afflictions.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/afflictions.csv'));
 			modctx.afflictions = parseTextToTable(data);
 			modctx.afflictions_lookup = createLookup(modctx.afflictions, 'bit_value');
 
-			var data = g_data.server_data['gamedata/buffs_1_types.csv'+versionCode];
+			data = g_data.server_data['gamedata/buffs_1_types.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/buffs_1_types.csv'));
 			modctx.buffs_1_types = parseTextToTable(data);
 			modctx.buffs_1_types_lookup = createLookup(modctx.buffs_1_types, 'bit_value');
 		
-			var data = g_data.server_data['gamedata/buffs_2_types.csv'+versionCode];
+			data = g_data.server_data['gamedata/buffs_2_types.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/buffs_2_types.csv'));
 			modctx.buffs_2_types = parseTextToTable(data);
 			modctx.buffs_2_types_lookup = createLookup(modctx.buffs_2_types, 'bit_value');
 		
-			var data = g_data.server_data['gamedata/enchantments.csv'+versionCode];
+			data = g_data.server_data['gamedata/enchantments.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/enchantments.csv'));
 			modctx.enchantments = parseTextToTable(data);
 			modctx.enchantments_lookup = createLookup(modctx.enchantments, 'number');
 		
-			var data = g_data.server_data['gamedata/enchantments_by_effect.csv'+versionCode];
+			data = g_data.server_data['gamedata/enchantments_by_effect.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/enchantments_by_effect.csv'));
 			modctx.enchantments_by_effect = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/magic_paths.csv'+versionCode];
+			data = g_data.server_data['gamedata/magic_paths.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/magic_paths.csv'));
 			modctx.magic_paths = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/restrict_to_nations_by_attribute.csv'+versionCode];
+			data = g_data.server_data['gamedata/restrict_to_nations_by_attribute.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/restrict_to_nations_by_attribute.csv'));
 			modctx.restrict_to_nations_by_attribute = parseTextToTable(data);
 			modctx.restrict_to_nations_by_attribute_lookup = createLookup(modctx.restrict_to_nations_by_attribute, 'attribute_record_id');
 		
-			var data = g_data.server_data['gamedata/special_damage_types.csv'+versionCode];
+			data = g_data.server_data['gamedata/special_damage_types.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/special_damage_types.csv'));
 			modctx.special_damage_types = parseTextToTable(data);
 			modctx.special_damage_types_lookup = createLookup(modctx.special_damage_types, 'bit_value');
 		
-			var data = g_data.server_data['gamedata/anon_province_events.csv'+versionCode];
+			data = g_data.server_data['gamedata/anon_province_events.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/anon_province_events.csv'));
 			modctx.anon_province_events = parseTextToTable(data);
 			modctx.anon_province_events_lookup = createLookup(modctx.anon_province_events, 'number');
 		
-			var data = g_data.server_data['gamedata/monster_tags.csv'+versionCode];
+			data = g_data.server_data['gamedata/monster_tags.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/monster_tags.csv'));
 			modctx.monster_tags = parseTextToTable(data);
 			modctx.monster_tags_lookup = createLookup(modctx.monster_tags, 'number');
 		
-			var data = g_data.server_data['gamedata/special_unique_summons.csv'+versionCode];
+			data = g_data.server_data['gamedata/special_unique_summons.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/special_unique_summons.csv'));
 			modctx.special_unique_summons = parseTextToTable(data);
 			modctx.special_unique_summons_lookup = createLookup(modctx.special_unique_summons, 'number');
 		
-			var data = g_data.server_data['gamedata/terrain_specific_summons.csv'+versionCode];
+			data = g_data.server_data['gamedata/terrain_specific_summons.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/terrain_specific_summons.csv'));
 			modctx.terrain_specific_summons = parseTextToTable(data);
 			modctx.terrain_specific_summons_lookup = createLookup(modctx.terrain_specific_summons, 'number');
 		
-			var data = g_data.server_data['gamedata/other_planes.csv'+versionCode];
+			data = g_data.server_data['gamedata/other_planes.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/other_planes.csv'));
 			modctx.other_planes = parseTextToTable(data);
 			modctx.other_planes_lookup = createLookup(modctx.other_planes, 'number');
 		
-			var data = g_data.server_data['gamedata/map_terrain_types.csv'+versionCode];
+			data = g_data.server_data['gamedata/map_terrain_types.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/map_terrain_types.csv'));
 			modctx.map_terrain_types = parseTextToTable(data);
 			modctx.map_terrain_types_lookup = createLookup(modctx.map_terrain_types, 'bit_value');
 		
-			var data = g_data.server_data['gamedata/site_terrain_types.csv'+versionCode];
+			data = g_data.server_data['gamedata/site_terrain_types.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/site_terrain_types.csv'));
 			modctx.site_terrain_types = parseTextToTable(data);
 			modctx.site_terrain_types_lookup = createLookup(modctx.site_terrain_types, 'bit_value');
 		
-			var data = g_data.server_data['gamedata/attributes_by_nation.csv'+versionCode];
+			data = g_data.server_data['gamedata/attributes_by_nation.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/attributes_by_nation.csv'));
 			modctx.attributes_by_nation = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/fort_leader_types_by_nation.csv'+versionCode];
+			data = g_data.server_data['gamedata/fort_leader_types_by_nation.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/fort_leader_types_by_nation.csv'));
 			modctx.fort_leader_types_by_nation = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/fort_troop_types_by_nation.csv'+versionCode];
+			data = g_data.server_data['gamedata/fort_troop_types_by_nation.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/fort_troop_types_by_nation.csv'));
 			modctx.fort_troop_types_by_nation = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/coast_leader_types_by_nation.csv'+versionCode];
+			data = g_data.server_data['gamedata/coast_leader_types_by_nation.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/coast_leader_types_by_nation.csv'));
 			modctx.coast_leader_types_by_nation = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/coast_troop_types_by_nation.csv'+versionCode];
+			data = g_data.server_data['gamedata/coast_troop_types_by_nation.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/coast_troop_types_by_nation.csv'));
 			modctx.coast_troop_types_by_nation = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/nonfort_leader_types_by_nation.csv'+versionCode];
+			data = g_data.server_data['gamedata/nonfort_leader_types_by_nation.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/nonfort_leader_types_by_nation.csv'));
 			modctx.nonfort_leader_types_by_nation = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/nonfort_troop_types_by_nation.csv'+versionCode];
+			data = g_data.server_data['gamedata/nonfort_troop_types_by_nation.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/nonfort_troop_types_by_nation.csv'));
 			modctx.nonfort_troop_types_by_nation = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/pretender_types_by_nation.csv'+versionCode];
+			data = g_data.server_data['gamedata/pretender_types_by_nation.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/pretender_types_by_nation.csv'));
 			modctx.pretender_types_by_nation = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/unpretender_types_by_nation.csv'+versionCode];
+			data = g_data.server_data['gamedata/unpretender_types_by_nation.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/unpretender_types_by_nation.csv'));
 			modctx.unpretender_types_by_nation = parseTextToTable(data);
 		
-			var data = g_data.server_data['gamedata/realms.csv'+versionCode];
+			data = g_data.server_data['gamedata/realms.csv'+versionCode];
 			if (!data) throw(DMI.Utils.error('ERROR LOADING: gamedata/realms.csv'));
 			modctx.realms = parseTextToTable(data);
 			
@@ -724,10 +718,8 @@ function parseData( g_data ) {
 			DMI.MSite.prepareData_PreMod();
 			DMI.MNation.prepareData_PreMod();
 			DMI.MMerc.prepareData_PreMod();
-			if (location.search.indexOf('loadEvents=1') != -1) {
-				DMI.MEvent.prepareData_PreMod();
-			}
-	
+			DMI.MEvent.prepareData_PreMod();
+
 			//parse the mods
 			for (var i=0, modname; modname = g_data.server_mods_to_load[i]; i++) {
 				var mod = g_data.server_data[modname];
@@ -761,18 +753,34 @@ function parseData( g_data ) {
 			g_data.upload_data = null;
 			
 			//after applying mod (order is important!)
+	// console.profile('MWpn PostMod');
 			DMI.MWpn.prepareData_PostMod();
+	// console.profileEnd('MWpn PostMod');
+	// console.profile('MArmor PostMod');
 			DMI.MArmor.prepareData_PostMod();
+    // console.profileEnd('MArmor PostMod');
+    // console.profile('MItem PostMod');
 			DMI.MItem.prepareData_PostMod();
+    // console.profileEnd('MItem PostMod');
+    // console.profile('MUnit PostMod');
 			DMI.MUnit.prepareData_PostMod();
+    // console.profileEnd('MUnit PostMod');
+    // console.profile('MSpell PostMod');
 			DMI.MSpell.prepareData_PostMod();
+    // console.profileEnd('MSpell PostMod');
+    // console.profile('MNation PostMod');
 			DMI.MNation.prepareData_PostMod();
+    // console.profileEnd('MNation PostMod');
+    // console.profile('MSite PostMod');
 			DMI.MSite.prepareData_PostMod();
+    // console.profileEnd('MSite PostMod');
+    // console.profile('MMerc PostMod');
 			DMI.MMerc.prepareData_PostMod();
-			if (location.search.indexOf('loadEvents=1') != -1) {
-				DMI.MEvent.prepareData_PostMod();
-			}
-			
+    // console.profileEnd('MMerc PostMod');
+    // console.profile('MEvent PostMod');
+			DMI.MEvent.prepareData_PostMod();
+    // console.profileEnd('MEvent PostMod');
+
 			//run callback
 			setTimeout(DMI.continueLoading, 1);
 }

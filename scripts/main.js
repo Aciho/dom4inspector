@@ -9,7 +9,6 @@ if (!console) var console={ log:function(){} };
 //DMI.Options['Show mod cmds'] = (location.search.indexOf('showids')!=-1 && location.search.indexOf('showmodcmds=1')!=-1);
 DMI.Options['Ignore mods'] = (location.search.indexOf('showids=1')!=-1 && location.search.indexOf('ignoremods=1')!=-1);
 DMI.Options['Custom js'] = location.search.indexOf('customjs=1')!=-1;
-DMI.Options['Load events'] = location.search.indexOf('loadEvents=1')!=-1;
 
 //on page load
 $(function() {

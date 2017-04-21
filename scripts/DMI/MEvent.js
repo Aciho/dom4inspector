@@ -105,7 +105,7 @@ MEvent.prepareData_PostMod = function() {
 			}
 			o.linkedReqCodes = linkedReqCodes;
 		}
-		if (o.code && o.code != 0) {
+		if (o.code && o.code !== 0) {
 			var linkedCodes = [];
 			var codes = [];
 			if (o.code.push) {
@@ -114,15 +114,15 @@ MEvent.prepareData_PostMod = function() {
 				codes.push(o.code);
 			}
 			for (var ix = 0; ix < codes.length; ix++) {
-				if (codes[ix] && codes[ix] != 0) {
+				if (codes[ix] && codes[ix] !== 0) {
 					for (var ok=0, o3;  o3 = modctx.eventdata[ok];  ok++) {
 						if (o3.req_code) {
 							if (o3.req_code.push) {
-								if (o3.req_code.indexOf(codes[ix]) != -1) {
+								if (o3.req_code.indexOf(codes[ix]) !== -1) {
 									linkedCodes.push(o3.id);
 								}
 							} else {
-								if (parseInt(codes[ix]) == parseInt(o3.req_code)) {
+								if (parseInt(codes[ix]) === parseInt(o3.req_code)) {
 									linkedCodes.push(o3.id);
 								}
 							}
@@ -132,11 +132,11 @@ MEvent.prepareData_PostMod = function() {
 			}			
 			o.linkedCodes = linkedCodes;
 		}
-		if (o.resetcode && o.resetcode != 0) {
+		if (o.resetcode && o.resetcode !== 0) {
 			var linkedResetCodes = [];
 			for (var ol=0, o4;  o4 = modctx.eventdata[ol];  ol++) {
 				if (o4.req_code) {
-					if (parseInt(o.resetcode) == parseInt(o4.req_code)) {
+					if (parseInt(o.resetcode) === parseInt(o4.req_code)) {
 						linkedResetCodes.push(o4.id);
 					}
 				}
@@ -234,10 +234,9 @@ MEvent.formatMagicEquip = function(v, o) {
 	case 2: ret = 'const lvl 0-4'; break;
 	case 3: ret = 'const lvl 0-6'; break;
 	case 4: ret = 'const lvl 4-6'; break;
-	case 9: 
-		var itemname = o.description.match(/\[(.*?)\]/);
-		if (itemname && itemname[0].length > 0) {
-			ret = Utils.itemRef(itemname[1]);
+	case 9:
+		if (typeof o.specifiedName !== "undefined") {
+			ret = Utils.itemRef(o.specifiedName);
 		}
 		break;
 	}
@@ -246,9 +245,8 @@ MEvent.formatMagicEquip = function(v, o) {
 MEvent.formatNewSite = function(v,o) {
 	var ret = 'Unknown';
 	switch(parseInt(v)) {
-	case -1: 
-		var sitename = o.description.match(/\[(.*?)\]/);
-		ret = Utils.siteRef(sitename[1]); 
+	case -1:
+		ret = Utils.siteRef(o.specifiedName);
 		break;
 	default:
 		return Utils.siteRef(parseInt(v));
@@ -257,18 +255,17 @@ MEvent.formatNewSite = function(v,o) {
 }
 MEvent.formatReqSite = function(v,o) {
 	var ret = 'Unknown';
-	var sitename = o.description.match(/\[(.*?)\]/);
 
-	if (sitename) {
+	if (typeof o.specifiedName !== "undefined") {
 		switch(parseInt(v)) {
 			case 0:
-				ret = Utils.siteRef(sitename[1]) + ' (Not present)';
+				ret = Utils.siteRef(o.specifiedName) + ' (Not present)';
 				break;
 			case 1:
-				ret =  Utils.siteRef(sitename[1]) + ' (Present)';
+				ret =  Utils.siteRef(o.specifiedName) + ' (Present)';
 				break;
 			default:
-				return Utils.siteRef(sitename[1]);
+				return Utils.siteRef(o.specifiedName);
 		}
 	}
 	return ret;
